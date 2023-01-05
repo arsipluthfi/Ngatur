@@ -1,3 +1,3 @@
 # Ngatur
 ### Onto the next semester!
-Java is easy as hell, look at this _engine_ I made!
+OOP is a bunch of bulls%@t!, look at this _engine_ I made!

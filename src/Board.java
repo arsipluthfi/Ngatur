@@ -7,12 +7,6 @@ public class Board extends Game {
     int castling = 0;
     int enPassant = NO_SQ;
 
-    long[] piecesCopy = new long[12];
-    long[] occupancyCopy = new long[3];
-    int sideCopy = BOTH;
-    int castlingCopy = 0;
-    int enPassantCopy = NO_SQ;
-
     final void parseFen(String fen) {
 
         int square = 0;

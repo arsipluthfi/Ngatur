@@ -190,36 +190,38 @@ interface Constants {
         return (move & CASTLING) != 0;
     }
 
+    /*
     default void copyBoard() {
-        Board board = (Board) this;
-
-        long[] pieces = new long[12];
-        long[] occupancy = new long[3];
+        
+        long[] piecesCopy = new long[12];
+        long[] occupancyCopy = new long[3];
+        int sideCopy = BOTH;
+        int castlingCopy = 0;
+        int enPassantCopy = NO_SQ;
 
         for (int i = 0; i < 12; i++) {
-            pieces[i] = board.pieces[i];
+            piecesCopy[i] = board.pieces[i];
         }
         
         for (int i = 0; i < 3; i++) {
-            occupancy[i] = board.occupancy[i];
+            occupancyCopy[i] = board.occupancy[i];
         }
 
-        board.piecesCopy = pieces;
-        board.occupancyCopy = occupancy;
-        board.sideCopy = board.side;
-        board.castlingCopy = board.castling;
-        board.enPassantCopy = board.enPassant;
+        sideCopy = board.side;
+        castlingCopy = board.castling;
+        enPassantCopy = board.enPassant;
     }
 
     default void restoreBoard() {
         Board board = (Board) this;
 
-        board.pieces = board.piecesCopy;
-        board.occupancy = board.occupancyCopy;
-        board.side = board.sideCopy;
-        board.castling = board.castlingCopy;
-        board.enPassant = board.enPassantCopy;
+        board.pieces = piecesCopy;
+        board.occupancy = occupancyCopy;
+        board.side = sideCopy;
+        board.castling = castlingCopy;
+        board.enPassant = enPassantCopy;
     }
+    */
 }
 
 interface BitHacks extends Constants {
@@ -414,14 +416,14 @@ interface MoveMasks extends BitHacks {
         long AB = ~(A_FILE | B_FILE);
         long GH = ~(G_FILE | H_FILE);
 
-        attack |= (piece & AB) != 0 ? piece >> 10 : 0;
+        attack |= (piece & AB) != 0 ? piece >>> 10 : 0;
         attack |= (piece & AB) != 0 ? piece << 6 : 0;
         attack |= (piece & GH) != 0 ? piece << 10 : 0;
-        attack |= (piece & GH) != 0 ? piece >> 6 : 0;
+        attack |= (piece & GH) != 0 ? piece >>> 6 : 0;
 
         attack |= (piece & ~A_FILE) != 0 ? piece << 15 : 0;
-        attack |= (piece & ~A_FILE) != 0 ? piece >> 17 : 0;
-        attack |= (piece & ~H_FILE) != 0 ? piece >> 15 : 0;
+        attack |= (piece & ~A_FILE) != 0 ? piece >>> 17 : 0;
+        attack |= (piece & ~H_FILE) != 0 ? piece >>> 15 : 0;
         attack |= (piece & ~H_FILE) != 0 ? piece << 17 : 0;
 
         return attack;
@@ -434,16 +436,16 @@ interface MoveMasks extends BitHacks {
 
         piece = setBit(piece, square);
 
-        attack |= (piece & ~H_FILE) != 0 ? piece >> 7 : 0;
+        attack |= (piece & ~H_FILE) != 0 ? piece >>> 7 : 0;
         attack |= (piece & ~H_FILE) != 0 ? piece << 1 : 0;
         attack |= (piece & ~H_FILE) != 0 ? piece << 9 : 0;
 
         attack |= (piece & ~A_FILE) != 0 ? piece << 7 : 0;
-        attack |= (piece & ~A_FILE) != 0 ? piece >> 1 : 0;
-        attack |= (piece & ~A_FILE) != 0 ? piece >> 9 : 0;
+        attack |= (piece & ~A_FILE) != 0 ? piece >>> 1 : 0;
+        attack |= (piece & ~A_FILE) != 0 ? piece >>> 9 : 0;
 
         attack |= piece != 0 ? piece << 8 : 0;
-        attack |= piece != 0 ? piece >> 8 : 0;
+        attack |= piece != 0 ? piece >>> 8 : 0;
 
         return attack;
     }
@@ -676,8 +678,9 @@ interface MoveGeneration extends MoveMasks {
                 }
             }
 
+            long epBoard = enPassant == NO_SQ ? 0 : setBit(0, enPassant);
             long attacks = pawnMasks[side][from];
-            long captures = attacks & (enemies | setBit(0, enPassant));
+            long captures = attacks & (enemies | epBoard);
 
             while (captures != 0) {
                 int capture = lsbIndex(captures);
@@ -766,7 +769,7 @@ interface MoveGeneration extends MoveMasks {
 
     private void castlingMoves(MoveList moveList) {
         boolean c1 = false, c2 = false, c3 = false, c4 = false;
-        boolean c5 = false, c6 = false, c7 = false, c8 = false;
+        boolean c5 = false, c6 = false, c7 = false, c8 = false, c9 = false;
 
         Board board = (Board) this;
         int side = board.side;
@@ -783,22 +786,24 @@ interface MoveGeneration extends MoveMasks {
         if ((castling & WEEN) != 0 && side == WHITE) {
             c5 = !getBit(occupancy, D1);
             c6 = !getBit(occupancy, C1);
-            c7 = !squareAttacked(E1, BLACK);
-            c8 = !squareAttacked(D1, BLACK);
+            c7 = !getBit(occupancy, B1);
+            c8 = !squareAttacked(E1, BLACK);
+            c9 = !squareAttacked(D1, BLACK);
         }
 
         if ((castling & BING) != 0 && side == BLACK) {
             c1 = !getBit(occupancy, F8);
             c2 = !getBit(occupancy, G8);
-            c3 = !squareAttacked(E8, BLACK);
-            c4 = !squareAttacked(F8, BLACK);
+            c3 = !squareAttacked(E8, WHITE);
+            c4 = !squareAttacked(F8, WHITE);
         }
 
         if ((castling & BEEN) != 0 && side == BLACK) {
             c5 = !getBit(occupancy, D8);
             c6 = !getBit(occupancy, C8);
-            c7 = !squareAttacked(E8, WHITE);
-            c8 = !squareAttacked(D8, BLACK);
+            c7 = !getBit(occupancy, B8);
+            c8 = !squareAttacked(E8, WHITE);
+            c9 = !squareAttacked(D8, WHITE);
         }
 
         if (c1 && c2 && c3 && c4) {
@@ -809,7 +814,7 @@ interface MoveGeneration extends MoveMasks {
             moveList.addMove(from, to, piece, 0, 0, 0, 0, 1);
         }
 
-        if (c5 && c6 && c7 && c8) {
+        if (c5 && c6 && c7 && c8 && c9) {
             int from = side == WHITE ? E1 : E8;
             int to = side == WHITE ? C1 : C8;
             int piece = side == WHITE ? WK : BK;
@@ -843,6 +848,7 @@ interface MoveGeneration extends MoveMasks {
         Board board = (Board) this;
         long[] pieces = board.pieces;
         long fill = board.occupancy[BOTH];
+        int enemy = side ^ 1;
 
         if ((kingMasks[square] & pieces[side == WHITE ? WK : BK]) != 0) {
             return true;
@@ -850,7 +856,7 @@ interface MoveGeneration extends MoveMasks {
         if ((knightMasks[square] & pieces[side == WHITE ? WN : BN]) != 0) {
             return true;
         }
-        if ((pawnMasks[side][square] & pieces[side == WHITE ? BP : WP]) != 0) {
+        if ((pawnMasks[enemy][square] & pieces[side == WHITE ? WP : BP]) != 0) {
             return true;
         }
         if ((getBishop(square, fill) & pieces[side == WHITE ? WB : BB]) != 0) {
@@ -895,6 +901,7 @@ interface MakeMove extends MoveGeneration {
 
     default boolean makeMove(int move) {
         Board board = (Board) this;
+        
         long[] pieces = board.pieces;
         long[] occupancy = board.occupancy;
         int side = board.side;
@@ -906,6 +913,24 @@ interface MakeMove extends MoveGeneration {
         boolean doublePush = getDouble(move);
         boolean epCapture = getEnPassant(move);
         boolean castleMove = getCastling(move);
+
+        long[] piecesCopy = new long[12];
+        long[] occupancyCopy = new long[3];
+        int sideCopy = BOTH;
+        int castlingCopy = 0;
+        int enPassantCopy = NO_SQ;
+
+        for (int i = 0; i < 12; i++) {
+            piecesCopy[i] = board.pieces[i];
+        }
+        
+        for (int i = 0; i < 3; i++) {
+            occupancyCopy[i] = board.occupancy[i];
+        }
+
+        sideCopy = board.side;
+        castlingCopy = board.castling;
+        enPassantCopy = board.enPassant;
         
         pieces[piece] = delBit(pieces[piece], origin);
 
@@ -990,11 +1015,14 @@ interface MakeMove extends MoveGeneration {
         }
 
         occupancy[BOTH] = occupancy[WHITE] | occupancy[BLACK];
-
-        side ^= 1;
+        board.side = side ^= 1;
 
         if (squareAttacked(lsbIndex(pieces[side == WHITE ? BK : WK]), side)) {
-            restoreBoard();
+            board.pieces = piecesCopy;
+            board.occupancy = occupancyCopy;
+            board.side = sideCopy;
+            board.castling = castlingCopy;
+            board.enPassant = enPassantCopy;
             return false;
         }
 

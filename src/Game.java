@@ -8,10 +8,10 @@ class Game implements All {
         board.initializeAll();
         board.parseFen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
         board.printBoard();
-        
+
         MoveList moveList = new MoveList();
         board.generateMoves(moveList);
-        
+
         long s = System.nanoTime();
         Perft perftTester = new Perft(board);
         System.out.println(perftTester.perftDriver(6));

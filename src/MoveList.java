@@ -14,7 +14,7 @@ class MoveList implements All {
         result |= (flags[2] << 21);
         result |= (flags[3] << 22);
         result |= (flags[4] << 23);
-        
+
         list[count++] = result;
     }
 

@@ -1,5 +1,5 @@
 public class Perft implements All {
-    
+
     long nodes;
     Board board;
 
@@ -14,7 +14,7 @@ public class Perft implements All {
 
         for (int moves: moveList.list) {
             if (moves != 0) {
-                
+
                 long[] piecesCopy = new long[12];
                 long[] occupancyCopy = new long[3];
                 int sideCopy = BOTH;
@@ -24,7 +24,7 @@ public class Perft implements All {
                 for (int i = 0; i < 12; i++) {
                     piecesCopy[i] = board.pieces[i];
                 }
-                
+
                 for (int i = 0; i < 3; i++) {
                     occupancyCopy[i] = board.occupancy[i];
                 }

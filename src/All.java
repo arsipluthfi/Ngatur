@@ -42,24 +42,24 @@ interface Constants {
     static int CASTLING = 0b100000000000000000000000;
 
     static int[] PIECES_INDEX = {
-        0x0, 0x2, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
-        0x0, 0x0, 0x5, 0x0, 0x0, 0x1, 0x0, 0x0, 
-        0x4, 0x3, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
-        0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
-        0x0, 0x8, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 
-        0x0, 0x0, 0xB, 0x0, 0x0, 0x7, 0x0, 0x6, 
+        0x0, 0x2, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0,
+        0x0, 0x0, 0x5, 0x0, 0x0, 0x1, 0x0, 0x0,
+        0x4, 0x3, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0,
+        0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0,
+        0x0, 0x8, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0,
+        0x0, 0x0, 0xB, 0x0, 0x0, 0x7, 0x0, 0x6,
         0xA, 0x9
     };
 
     static int[] CASTLE_RIGHTS = {
-        0x7, 0xF, 0xF, 0xF, 0x3, 0xF, 0xF, 0xB, 
-        0xF, 0xF, 0xF, 0xF, 0xF, 0xF, 0xF, 0xF, 
-        0xF, 0xF, 0xF, 0xF, 0xF, 0xF, 0xF, 0xF, 
-        0xF, 0xF, 0xF, 0xF, 0xF, 0xF, 0xF, 0xF, 
-        0xF, 0xF, 0xF, 0xF, 0xF, 0xF, 0xF, 0xF, 
-        0xF, 0xF, 0xF, 0xF, 0xF, 0xF, 0xF, 0xF, 
-        0xF, 0xF, 0xF, 0xF, 0xF, 0xF, 0xF, 0xF, 
-        0xD, 0xF, 0xF, 0xF, 0xC, 0xF, 0xF, 0xE, 
+        0x7, 0xF, 0xF, 0xF, 0x3, 0xF, 0xF, 0xB,
+        0xF, 0xF, 0xF, 0xF, 0xF, 0xF, 0xF, 0xF,
+        0xF, 0xF, 0xF, 0xF, 0xF, 0xF, 0xF, 0xF,
+        0xF, 0xF, 0xF, 0xF, 0xF, 0xF, 0xF, 0xF,
+        0xF, 0xF, 0xF, 0xF, 0xF, 0xF, 0xF, 0xF,
+        0xF, 0xF, 0xF, 0xF, 0xF, 0xF, 0xF, 0xF,
+        0xF, 0xF, 0xF, 0xF, 0xF, 0xF, 0xF, 0xF,
+        0xD, 0xF, 0xF, 0xF, 0xC, 0xF, 0xF, 0xE,
     };
 
     static long[] BAGICS = {
@@ -192,7 +192,7 @@ interface Constants {
 
     /*
     default void copyBoard() {
-        
+
         long[] piecesCopy = new long[12];
         long[] occupancyCopy = new long[3];
         int sideCopy = BOTH;
@@ -202,7 +202,7 @@ interface Constants {
         for (int i = 0; i < 12; i++) {
             piecesCopy[i] = board.pieces[i];
         }
-        
+
         for (int i = 0; i < 3; i++) {
             occupancyCopy[i] = board.occupancy[i];
         }
@@ -282,7 +282,7 @@ interface BitHacks extends Constants {
         int target = getTarget(move);
         int piece = getPiece(move);
         int promoted = getPromoted(move);
-        
+
         boolean promote = promoted != 0;
         boolean enPassant = getEnPassant(move);
         boolean capture = getCapture(move);
@@ -694,7 +694,7 @@ interface MoveGeneration extends MoveMasks {
                     moveList.addMove(from, enPassant, pawn, 0, 1, 0, 1, 0);
                 } else {
                     moveList.addMove(from, capture, pawn, 0, 1, 0, 0, 0);
-                } 
+                }
 
                 captures &= ~(1L << capture);
             }
@@ -901,11 +901,11 @@ interface MakeMove extends MoveGeneration {
 
     default boolean makeMove(int move) {
         Board board = (Board) this;
-        
+
         long[] pieces = board.pieces;
         long[] occupancy = board.occupancy;
         int side = board.side;
-            
+
         int origin = getOrigin(move);
         int target = getTarget(move);
         int piece = getPiece(move);
@@ -923,7 +923,7 @@ interface MakeMove extends MoveGeneration {
         for (int i = 0; i < 12; i++) {
             piecesCopy[i] = board.pieces[i];
         }
-        
+
         for (int i = 0; i < 3; i++) {
             occupancyCopy[i] = board.occupancy[i];
         }
@@ -931,7 +931,7 @@ interface MakeMove extends MoveGeneration {
         sideCopy = board.side;
         castlingCopy = board.castling;
         enPassantCopy = board.enPassant;
-        
+
         pieces[piece] = delBit(pieces[piece], origin);
 
         if (getCapture(move)) {
@@ -946,7 +946,7 @@ interface MakeMove extends MoveGeneration {
             if (promoted != 0) {
                 pieces[promoted] = setBit(pieces[promoted], target);
             } else if (epCapture) {
-                
+
                 if (side == WHITE) {
                     pieces[WP] = setBit(pieces[WP], target);
                     pieces[BP] = delBit(pieces[BP], target + 8);
@@ -954,7 +954,7 @@ interface MakeMove extends MoveGeneration {
                     pieces[BP] = setBit(pieces[BP], target);
                     pieces[WP] = delBit(pieces[WP], target - 8);
                 }
-                
+
             } else {
                 pieces[piece] = setBit(pieces[piece], target);
             }
@@ -968,7 +968,7 @@ interface MakeMove extends MoveGeneration {
         if (!doublePush) {
             board.enPassant = NO_SQ;
         } else {
-            
+
             if (side == WHITE) {
                 board.enPassant = target + 8;
             } else {
@@ -1002,7 +1002,7 @@ interface MakeMove extends MoveGeneration {
         }
 
         board.castling &= CASTLE_RIGHTS[origin] & CASTLE_RIGHTS[target];
-        
+
         occupancy[BLACK] = 0;
         occupancy[WHITE] = 0;
 

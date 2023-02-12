@@ -16,7 +16,7 @@ public class Board extends Game {
         for (int i = 0; i < 12; i++) {
             pieces[i] = 0;
         }
-        
+
         for (int i = 0; i < 3; i++) {
             occupancy[i] = 0;
         }
@@ -34,12 +34,12 @@ public class Board extends Game {
                     int piece = PIECES_INDEX[c - 'A'];
                     pieces[piece] = ((pieces[piece]) |= (1L << ( square++)));
                 }
-                case 'p', 'b', 'n', 'r', 'q', 'k' -> { 
-                    int piece = PIECES_INDEX[c - 'A'];                 
+                case 'p', 'b', 'n', 'r', 'q', 'k' -> {
+                    int piece = PIECES_INDEX[c - 'A'];
                     pieces[piece] = ((pieces[piece]) |= (1L << ( square++)));
                 }
             }
-            
+
             c = fen.charAt(++pointer);
 
         } while (c != ' ');
@@ -58,7 +58,7 @@ public class Board extends Game {
             }
             c = fen.charAt(++pointer);
         }
-        
+
         c = fen.charAt(++pointer);
 
         while (c != ' ') {

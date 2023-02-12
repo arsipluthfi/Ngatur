@@ -30,4 +30,3 @@ class MoveList implements All {
         System.out.print("╚═════╩═════════════╝\n");
     }
 }
-

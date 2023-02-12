@@ -140,5 +140,3 @@ public class Board extends Game {
     }
 
 }
-
-

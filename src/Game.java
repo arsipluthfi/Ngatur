@@ -1,4 +1,3 @@
-
 class Game implements All {
 
     public static void main(String[] args) throws Exception {
@@ -18,4 +17,3 @@ class Game implements All {
         System.out.printf("it took %d nanoseconds\n", System.nanoTime() - s);
     }
 }
-

@@ -1,7 +1,7 @@
 class MoveList implements All {
 
     int[] list = new int[256];
-    int count = 0;
+    int count;
 
     final void addMove(int from, int to, int piece, int... flags) {
         int result = 0;

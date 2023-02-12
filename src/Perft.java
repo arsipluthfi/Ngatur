@@ -37,8 +37,7 @@ public class Perft implements All {
                     continue;
                 }
 
-                Perft nextPerft = new Perft(board);
-                nodes += nextPerft.perftDriver(depth - 1);
+                nodes += new Perft(board).perftDriver(depth - 1);
 
                 board.pieces = piecesCopy;
                 board.occupancy = occupancyCopy;

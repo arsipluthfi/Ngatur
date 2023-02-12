@@ -13,7 +13,8 @@ class Game implements All {
 
         long s = System.nanoTime();
         Perft perftTester = new Perft(board);
-        System.out.printf("%d nodes visited\n", perftTester.perftDriver(6));
+        perftTester.perftDriver(6);
+        System.out.printf("%d nodes visited\n", perftTester.nodes);
         System.out.printf("it took %d nanoseconds\n", System.nanoTime() - s);
     }
 }

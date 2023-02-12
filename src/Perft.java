@@ -3,10 +3,10 @@ public class Perft implements All {
     long nodes;
     Board board;
 
-    long perftDriver(int depth) {
+    void perftDriver(int depth) {
 
-        if (depth == 0) {
-            return 1;
+        if (depth == 0 && ++nodes != 0) {
+            return;
         }
 
         MoveList moveList = new MoveList();
@@ -33,7 +33,7 @@ public class Perft implements All {
                     continue;
                 }
 
-                nodes += new Perft(board).perftDriver(depth - 1);
+                perftDriver(depth - 1);
 
                 board.pieces = piecesCopy;
                 board.occupancy = occupancyCopy;
@@ -42,8 +42,6 @@ public class Perft implements All {
                 board.enPassant = enPassantCopy;
             }
         }
-
-        return nodes;
     }
 
     public Perft(Board board) {

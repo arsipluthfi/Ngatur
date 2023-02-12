@@ -17,9 +17,9 @@ public class Perft implements All {
 
                 long[] piecesCopy = new long[12];
                 long[] occupancyCopy = new long[3];
-                int sideCopy = BOTH;
-                int castlingCopy = 0;
-                int enPassantCopy = NO_SQ;
+                int sideCopy = board.side;
+                int castlingCopy = board.castling;
+                int enPassantCopy = board.enPassant;
 
                 for (int i = 0; i < 12; i++) {
                     piecesCopy[i] = board.pieces[i];
@@ -28,10 +28,6 @@ public class Perft implements All {
                 for (int i = 0; i < 3; i++) {
                     occupancyCopy[i] = board.occupancy[i];
                 }
-
-                sideCopy = board.side;
-                castlingCopy = board.castling;
-                enPassantCopy = board.enPassant;
 
                 if (!board.makeMove(moves)) {
                     continue;

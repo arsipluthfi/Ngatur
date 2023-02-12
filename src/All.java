@@ -189,39 +189,6 @@ interface Constants {
     default boolean getCastling(int move) {
         return (move & CASTLING) != 0;
     }
-
-    /*
-    default void copyBoard() {
-
-        long[] piecesCopy = new long[12];
-        long[] occupancyCopy = new long[3];
-        int sideCopy = BOTH;
-        int castlingCopy = 0;
-        int enPassantCopy = NO_SQ;
-
-        for (int i = 0; i < 12; i++) {
-            piecesCopy[i] = board.pieces[i];
-        }
-
-        for (int i = 0; i < 3; i++) {
-            occupancyCopy[i] = board.occupancy[i];
-        }
-
-        sideCopy = board.side;
-        castlingCopy = board.castling;
-        enPassantCopy = board.enPassant;
-    }
-
-    default void restoreBoard() {
-        Board board = (Board) this;
-
-        board.pieces = piecesCopy;
-        board.occupancy = occupancyCopy;
-        board.side = sideCopy;
-        board.castling = castlingCopy;
-        board.enPassant = enPassantCopy;
-    }
-    */
 }
 
 interface BitHacks extends Constants {
@@ -916,9 +883,9 @@ interface MakeMove extends MoveGeneration {
 
         long[] piecesCopy = new long[12];
         long[] occupancyCopy = new long[3];
-        int sideCopy = BOTH;
-        int castlingCopy = 0;
-        int enPassantCopy = NO_SQ;
+        int sideCopy = board.side;
+        int castlingCopy = board.castling;
+        int enPassantCopy = board.enPassant;
 
         for (int i = 0; i < 12; i++) {
             piecesCopy[i] = board.pieces[i];
@@ -927,10 +894,6 @@ interface MakeMove extends MoveGeneration {
         for (int i = 0; i < 3; i++) {
             occupancyCopy[i] = board.occupancy[i];
         }
-
-        sideCopy = board.side;
-        castlingCopy = board.castling;
-        enPassantCopy = board.enPassant;
 
         pieces[piece] = delBit(pieces[piece], origin);
 

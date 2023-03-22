@@ -701,7 +701,7 @@ interface MoveGeneration extends MoveMasks {
 
     }
 
-    private void bishopMoves(long pieceBoard, int piece, MoveList moveList) {
+    private void sliderMoves(long pieceBoard, int piece, MoveList moveList) {
 
         Board board = (Board) this;
 
@@ -852,7 +852,7 @@ interface MoveGeneration extends MoveMasks {
                     leaperMoves(pieceBoard, piece, movelist);
                 }
                 case WB, BB, WR, BR, WQ, BQ -> {
-                    bishopMoves(pieceBoard, piece, movelist);
+                    sliderMoves(pieceBoard, piece, movelist);
                 }
             }
         }
